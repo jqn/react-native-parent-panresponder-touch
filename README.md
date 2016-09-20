@@ -7,6 +7,9 @@ This is essentially how React Native Navigation works and limits the response to
 You can check it out here as it's more elegant.
 https://github.com/facebook/react-native/blob/a2fb703bbb988038323c55b29b40e8f5ff52966d/Libraries/CustomComponents/NavigationExperimental/NavigationCardStackPanResponder.js#L97
 
+
+The key is to use `onMoveShouldSetPanResponder`. If you specify this, you will receive all the `event` and `gestureState` information and when you finally return `true` it will trigger the flow through the `PanResponder` like you'd expect.
+
 If you move in any direction 30 pixels than it will trigger and set the directions you've moved.
 If you go inside a color it will also add the color.
 
