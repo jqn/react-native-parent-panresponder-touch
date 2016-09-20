@@ -35,12 +35,28 @@ const zone2 = {
   backgroundColor: "blue"
 }
 
-const getColor = ({ moveX, moveY}) => {
+const getDirectionAndColor = ({ moveX, moveY, dx, dy}) => {
+  const draggedDown = dy > 30;
+  const draggedUp = dy < -30;
+  const draggedLeft = dx < -30;
+  const draggedRight = dx > 30;
   const isRed = moveY < 90 && moveY > 40 && moveX > 0 && moveX < width;
   const isBlue = moveY > (height - 50) && moveX > 0 && moveX < width;
-  
-  if (isRed) return "red";
-  if (isBlue) return "blue";
+  let dragDirection = '';
+
+  if (draggedDown || draggedUp) {
+    if (draggedDown) dragDirection += 'dragged down '
+    if (draggedUp) dragDirection +=  'dragged up ';
+  }
+
+  if (draggedLeft || draggedRight) {
+    if (draggedLeft) dragDirection += 'dragged left '
+    if (draggedRight) dragDirection +=  'dragged right ';
+  }
+
+  if (isRed) return `red ${dragDirection}`
+  if (isBlue) return `blue ${dragDirection}`
+  if (dragDirection) return dragDirection;
 }
 
 class panreject extends Component {
@@ -60,16 +76,16 @@ class panreject extends Component {
       // onStartShouldSetPanResponder: (evt, gestureState) => true,
       // onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponder:(evt, gestureState) => {
-        return !!getColor(gestureState);
+        return !!getDirectionAndColor(gestureState);
       },
 
       onPanResponderGrant: (evt, gestureState) => {
    
       },
       onPanResponderMove: (evt, gestureState) => {
-        const color = getColor(gestureState);
+        const drag = getDirectionAndColor(gestureState);
         this.setState({
-          zone: color,
+          zone: drag,
         })
       },
       onPanResponderTerminationRequest: (evt, gestureState) => true,
